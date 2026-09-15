@@ -60,6 +60,19 @@ input,select,textarea{font:inherit;color:inherit}
   background:var(--card);border:1px solid var(--border)}
 .icon-btn:hover{color:var(--ink);border-color:var(--border2)}
 .content{flex:1;padding:1.25rem;overflow-y:auto}
+.sidebar-footer{margin-top:auto;flex-shrink:0;padding:0.85rem 0.9rem;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:0.5rem;align-items:center;text-align:center}
+.footer-love{font-size:0.66rem;color:var(--ink3)}
+.bmc-link{display:inline-flex;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem;border-radius:99px;
+  font-size:0.68rem;font-weight:700;color:var(--gold);background:var(--gold-dim);
+  border:1px solid rgba(212,168,67,0.25);transition:var(--tr);text-decoration:none;white-space:nowrap}
+.bmc-link:hover{background:var(--gold);color:#0E0E1C}
+.bmc-btn{display:inline-flex;align-items:center;gap:0.35rem;padding:0.5rem 0.9rem;border-radius:99px;
+  font-size:0.76rem;font-weight:700;color:var(--gold);background:var(--gold-dim);
+  border:1px solid rgba(212,168,67,0.25);transition:var(--tr);text-decoration:none}
+.bmc-btn:hover{background:var(--gold);color:#0E0E1C}
+body.light .sidebar-footer{border-top-color:#DDDDF0}
+body.light .footer-love{color:#9090A8}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:49}
 .overlay.show{display:block}
 .panel{display:none}.panel.active{display:block}
@@ -232,12 +245,17 @@ body.light input:focus,body.light select:focus,body.light textarea:focus{backgro
       <div><div class="logo-text">Money Planner</div><div class="logo-sub">Ultimate Edition</div></div>
     </div>
     <div id="SIDENAV"></div>
+    <div class="sidebar-footer">
+      <div class="footer-love">Built with ❤️</div>
+      <a href="https://www.buymeacoffee.com/gorj" target="_blank" rel="noopener" class="bmc-link">☕ Buy me a coffee</a>
+    </div>
   </aside>
   <div class="overlay" id="OVERLAY" onclick="closeSidebar()"></div>
   <div class="main">
     <div class="topbar">
       <span class="topbar-title" id="TB_TITLE">Dashboard</span>
       <div class="topbar-right">
+        <button class="icon-btn" onclick="shareApp()" title="Share">📤</button>
         <button class="icon-btn" id="THEME_BTN" onclick="toggleTheme()" title="Toggle light/dark">🌙</button>
         <button class="icon-btn" onclick="exportData()" title="Export">⬇️</button>
         <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
@@ -1435,7 +1453,12 @@ function openSettings(){openModal(`<h3>⚙️ Settings</h3>
   </div>
   <input type="file" id="imp_file" accept="application/json,.json" style="display:none" onchange="importData(event)">
   <div style="font-size:0.68rem;color:var(--ink2);margin-bottom:0.9rem;line-height:1.5">Importing a backup replaces your current data with the data in that file. Export a fresh backup first if you want to keep what's here now.</div>
-  <button class="btn btn-red btn-block" onclick="clearAll()">🗑️ Clear All Data</button>`);}
+  <button class="btn btn-red btn-block" style="margin-bottom:0.9rem" onclick="clearAll()">🗑️ Clear All Data</button>
+  <div class="div"></div>
+  <div style="text-align:center">
+    <div style="font-size:0.76rem;color:var(--ink2);margin-bottom:0.55rem">Built with ❤️ — free for everyone to use</div>
+    <a href="${BMC_URL}" target="_blank" rel="noopener" class="bmc-btn">☕ If this is helpful, buy me a coffee</a>
+  </div>`);}
 function saveSettings(){const u=G.user();u.name=document.getElementById('set_n').value.trim();u.currency=document.getElementById('set_c').value.trim()||'$';ss(K.user,u);closeModal();toast('Settings saved ✓','good');renderTab(currentTab);}
 function exportData(){const data={};Object.entries(K).forEach(([k,v])=>{const d=ls(v);if(d)data[k]=d});
   const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -1459,6 +1482,30 @@ function importData(evt){
 }
 function clearAll(){if(!confirm('⚠️ Delete ALL data? This cannot be undone.'))return;Object.values(K).forEach(v=>localStorage.removeItem(v));location.reload();}
 
+/* ══ SHARE ══ */
+const SHARE_APP_NAME='The Ultimate Money Planner';
+const SHARE_URL='https://gorj.systeme.io';
+const SHARE_TEXT="Tracked my money and I can finally see exactly where it all goes. Free to use with The Ultimate Money Planner —";
+const BMC_URL='https://www.buymeacoffee.com/gorj';
+function shareApp(){
+  if(navigator.share){
+    navigator.share({title:SHARE_APP_NAME,text:SHARE_TEXT,url:SHARE_URL}).catch(()=>{});
+    return;
+  }
+  const full=SHARE_TEXT+' '+SHARE_URL;
+  copyShareText(full);
+}
+function copyShareText(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast('Copied — paste it anywhere ✓','good')).catch(()=>legacyCopy(text));
+  }else legacyCopy(text);
+}
+function legacyCopy(text){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');toast('Copied — paste it anywhere ✓','good');}catch{toast('Could not copy — please copy manually','bad');}
+  document.body.removeChild(ta);
+}
 
 /* ══ ONBOARDING ══ */
 const OB=[
