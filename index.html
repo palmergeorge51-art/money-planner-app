@@ -71,10 +71,6 @@ input,select,textarea{font:inherit;color:inherit}
   font-size:0.76rem;font-weight:700;color:var(--gold);background:var(--gold-dim);
   border:1px solid rgba(212,168,67,0.25);transition:var(--tr);text-decoration:none}
 .bmc-btn:hover{background:var(--gold);color:#0E0E1C}
-.bmc-banner{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;
-  padding:0.65rem 0.9rem;border-radius:var(--r-sm);margin-bottom:0.85rem;
-  background:var(--gold-dim);border:1px solid rgba(212,168,67,0.25);flex-wrap:wrap}
-.bmc-banner-text{font-size:0.76rem;color:var(--gold);font-weight:600;line-height:1.4}
 body.light .sidebar-footer{border-top-color:#DDDDF0}
 body.light .footer-love{color:#9090A8}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:49}
@@ -497,9 +493,6 @@ function renderDashboard(){
   const mData=MONTHS.map((_,i)=>{const mk=`${NOW.getFullYear()}-${String(i+1).padStart(2,'0')}`;
     return{label:MONTHS[i],value:mInc(mk)-mExp(mk).reduce((s,e)=>s+e.amount,0),color:'var(--green)'}});
   document.getElementById('CONTENT').innerHTML=`
-    <div class="bmc-banner" style="justify-content:center">
-      <a href="${BMC_URL}" target="_blank" rel="noopener" class="bmc-btn">☕ Buy me a coffee</a>
-    </div>
     <div style="margin-bottom:0.75rem"><div style="font-size:0.68rem;color:var(--ink2)">${MF[NOW.getMonth()]}</div>
       <div style="font-size:1.05rem;font-weight:800">${greet}${u.name?', '+u.name:''} 👋</div></div>
     ${al}
@@ -1491,7 +1484,7 @@ function clearAll(){if(!confirm('⚠️ Delete ALL data? This cannot be undone.'
 
 /* ══ SHARE ══ */
 const SHARE_APP_NAME='The Ultimate Money Planner';
-const SHARE_URL='https://palmergeorge51-art.github.io/money-planner-app/';
+const SHARE_URL='https://gorj.systeme.io';
 const SHARE_TEXT="Tracked my money and I can finally see exactly where it all goes. Free to use with The Ultimate Money Planner —";
 const BMC_URL='https://www.buymeacoffee.com/gorj';
 function shareApp(){
